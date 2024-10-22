@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список завдань</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+        .task-number {
+            margin-right: 10px;
+        }
+        .task {
+            flex: 1;
+            display: inline-block;
+        }
+        .delete, .edit {
+            margin-left: 10px;
+            cursor: pointer;
+            color: red;
+        }
+        .edit {
+            color: blue;
+        }
+        .add-task {
+            display: flex;
+            justify-content: space-between;
+        }
+        .add-task input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .add-task button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-task button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Список завдань</h1>
+        <ol id="task-list">
+            <!-- Список завдань -->
+        </ol>
+        <div class="add-task">
+            <input type="text" id="new-task" placeholder="Нове завдання...">
+            <button onclick="addTask()">Додати</button>
+        </div>
+    </div>
+
+    <script>
+        function addTask() {
+            var taskInput = document.getElementById('new-task');
+            var taskList = document.getElementById('task-list');
+
+            if (taskInput.value.trim() !== "") {
+                var li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="task-number"></span>
+                    <span class="task">${taskInput.value}</span>
+                    <span class="edit" onclick="editTask(this)">Редагувати</span>
+                    <span class="delete" onclick="removeTask(this)">Видалити</span>
+                `;
+                taskList.appendChild(li); // Додаємо нове завдання до списку <ol>
+                taskInput.value = ''; // Очищаємо поле введення
+                updateTaskNumbers(); // Оновлюємо нумерацію
+            } else {
+                alert("Введіть текст завдання!"); // Попередження при порожньому полі
+            }
+        }
+
+        function removeTask(element) {
+            var li = element.parentNode; // Отримуємо елемент <li>
+            li.parentNode.removeChild(li); // Видаляємо цей <li> зі списку
+            updateTaskNumbers(); // Оновлюємо нумерацію після видалення
+        }
+
+        function editTask(element) {
+            var li = element.parentNode; // Отримуємо батьківський елемент <li>
+            var taskSpan = li.querySelector('.task'); // Отримуємо текст завдання
+            var newTaskText = prompt("Редагувати завдання:", taskSpan.textContent); // Виводимо діалогове вікно для редагування
+
+            if (newTaskText !== null && newTaskText.trim() !== "") {
+                taskSpan.textContent = newTaskText; // Оновлюємо текст завдання
+            }
+        }
+
+        function updateTaskNumbers() {
+            var taskList = document.getElementById('task-list');
+            var tasks = taskList.getElementsByTagName('li'); // Отримуємо всі завдання
+            for (var i = 0; i < tasks.length; i++) {
+                tasks[i].querySelector('.task-number').textContent = (i + 1) + ". "; // Оновлюємо тільки номер завдання
+            }
+        }
+    </script>
+</body>
+</html>
